@@ -11,13 +11,14 @@ class NetlightsCli < Formula
   # Bump on every release alongside the cask. sha256 of the GitHub source tarball:
   #   curl -sL https://github.com/willowhawk-k/NetLights/archive/refs/tags/v<version>.tar.gz | shasum -a 256
   url "https://github.com/willowhawk-k/NetLights/archive/refs/tags/v1.9.0.tar.gz"
-  sha256 "5e962880f8f4cbfaf8cca88dbaa9bbd014e984edcf61f470b1dfed4d0063f656"
+  sha256 "35b503615fda6b5c3e8c68fd4855123eb93651abd9f5cc6b0397efaf50025836"
   license "MIT"
 
   depends_on :macos
 
-  conflicts_with cask:    "netlights",
-                 because: "both install a `netlights` executable"
+  # NOTE: Homebrew's Formula DSL has no formula-vs-CASK conflict. `conflicts_with cask:`
+  # is silently accepted and does nothing, so it was removed rather than left as a false
+  # guarantee — the caveats below carry the warning instead.
 
   def install
     bin.install "scripts/netlights-shim.sh" => "netlights"
@@ -25,6 +26,9 @@ class NetlightsCli < Formula
 
   def caveats
     <<~EOS
+      Do NOT install this alongside the `netlights` cask — both provide a `netlights`
+      command and Homebrew cannot detect the clash automatically. Pick one.
+
       `netlights` will run whichever NetLights.app it finds in /Applications or
       ~/Applications — including the Mac App Store build.
 
